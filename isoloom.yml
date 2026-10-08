@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# Metasploitable 3, Windows Server 2008 R2 machine (by Rapid7): an intentionally vulnerable
+# Windows server with IIS, GlassFish, Jenkins, Struts, WordPress, ManageEngine, Elasticsearch and
+# more. Source: https://github.com/rapid7/metasploitable3, vendored in metasploitable3/. Runs
+# Rapid7's published box built from that source (rapid7/metasploitable3-win2k8, as upstream's
+# Vagrantfile does), then upstream's first-boot steps (provision/startup.ps1). VM targets only.
+# `isoloom run vagrant`, then `isoloom test vagrant`.
+version: 1
+name: metasploitable3-windows
+
+networks:
+  lab: { cidr: 10.60.83.0/24 }
+
+machines:
+  win2k8:
+    networks: { lab: 10 }
+    services:
+      - { port: 21, name: ftp }
+      - { port: 22, name: ssh }
+      - { port: 80, name: iis, http: true }
+      - { port: 4848, name: glassfish-admin }
+      - { port: 8020, name: manageengine }
+      - { port: 8383, name: manageengine-https }
+      - { port: 8080, name: glassfish, http: true }
+      - { port: 8282, name: struts }
+      - { port: 8484, name: jenkins, http: true }
+      - { port: 8585, name: wamp, http: true }
+      - { port: 9200, name: elasticsearch, http: true }
+    resources: { cpus: 2, memory_mb: 4096 }
+    vm:
+      # Windows Server 2008 R2 has no built-in OS name in Isoloom; the box is given explicitly.
+      os: windows-server-2016
+      image:
+        vagrant: rapid7/metasploitable3-win2k8
+        vagrant_version: "0.1.0-weekly"
+        winrm: plaintext
+      provision: [provision/startup.ps1]
+
+checks:
+  - { name: iis answers, http: "http://win2k8/", wait: 600 }
+  - { name: jenkins answers, tcp: "win2k8:8484", wait: 300 }
+  - { name: ftp answers, tcp: "win2k8:21" }
+  - { name: ssh answers, tcp: "win2k8:22" }
+  - { name: glassfish admin answers, tcp: "win2k8:4848", wait: 300 }
+  - { name: glassfish answers, tcp: "win2k8:8080" }
+  - { name: manageengine answers, tcp: "win2k8:8020", wait: 300 }
+  - { name: struts answers, tcp: "win2k8:8282", wait: 300 }
+  - { name: wamp answers, tcp: "win2k8:8585" }
+  - { name: elasticsearch answers, tcp: "win2k8:9200", wait: 300 }
+  - checks/vulnerable-services.sh
+
+message: |
+  Metasploitable 3 (Windows Server 2008 R2) is up at {{ machines.win2k8.addresses.lab }}. Scan it:
+  IIS, FTP, GlassFish, Jenkins, Apache Struts, WordPress on WAMP, ManageEngine Desktop Central,
+  Elasticsearch and more. Fifteen card flags are hidden on the machine.

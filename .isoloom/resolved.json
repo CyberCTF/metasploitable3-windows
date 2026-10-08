@@ -1,0 +1,254 @@
+{
+  "generated_by_isoloom": "from isoloom.yml; don't edit: change the spec and run `isoloom generate` (`isoloom check` fails when this file is out of date)",
+  "resolved_version": 1,
+  "name": "metasploitable3-windows",
+  "instance": null,
+  "inputs": [],
+  "networks": {
+    "lab": {
+      "cidr": "10.60.83.0/24",
+      "docker_cidr": "10.60.83.0/24",
+      "internet": true,
+      "gateway": null,
+      "gateway_address": "10.60.83.1",
+      "router": null,
+      "controller": "10.60.83.253"
+    }
+  },
+  "reach": [],
+  "machines": {
+    "win2k8": {
+      "access": false,
+      "supplied": false,
+      "shapes": [
+        "vm"
+      ],
+      "arch": "amd64",
+      "os": "windows-server-2016",
+      "windows": true,
+      "addresses": {
+        "lab": "10.60.83.10"
+      },
+      "docker_addresses": {
+        "lab": "10.60.83.10"
+      },
+      "services": [
+        {
+          "port": 21,
+          "name": "ftp",
+          "http": false,
+          "publish": null
+        },
+        {
+          "port": 22,
+          "name": "ssh",
+          "http": false,
+          "publish": null
+        },
+        {
+          "port": 80,
+          "name": "iis",
+          "http": true,
+          "publish": null
+        },
+        {
+          "port": 4848,
+          "name": "glassfish-admin",
+          "http": false,
+          "publish": null
+        },
+        {
+          "port": 8020,
+          "name": "manageengine",
+          "http": false,
+          "publish": null
+        },
+        {
+          "port": 8383,
+          "name": "manageengine-https",
+          "http": false,
+          "publish": null
+        },
+        {
+          "port": 8080,
+          "name": "glassfish",
+          "http": true,
+          "publish": null
+        },
+        {
+          "port": 8282,
+          "name": "struts",
+          "http": false,
+          "publish": null
+        },
+        {
+          "port": 8484,
+          "name": "jenkins",
+          "http": true,
+          "publish": null
+        },
+        {
+          "port": 8585,
+          "name": "wamp",
+          "http": true,
+          "publish": null
+        },
+        {
+          "port": 9200,
+          "name": "elasticsearch",
+          "http": true,
+          "publish": null
+        }
+      ],
+      "depends_on": [],
+      "inputs": [],
+      "volumes": {},
+      "resources": {
+        "cpus": 2,
+        "memory_mb": 4096,
+        "disk_gb": 20
+      },
+      "gateway_of": [],
+      "routes": [],
+      "default_gateway": null,
+      "offline": false
+    }
+  },
+  "start_order": [
+    "win2k8"
+  ],
+  "clones": {},
+  "tools": {},
+  "groups": {},
+  "router": null,
+  "controller": {
+    "addresses": {
+      "lab": "10.60.83.253"
+    }
+  },
+  "published": [],
+  "targets": {
+    "possible": [
+      "vagrant",
+      "proxmox",
+      "cloud-vm"
+    ],
+    "generated": [
+      "vagrant",
+      "cloud-vm"
+    ],
+    "refused": {
+      "proxmox": "machine `win2k8`: no Proxmox image for `windows-server-2016` yet (Debian, Ubuntu, Rocky, AlmaLinux, CentOS 7)"
+    },
+    "not_possible": {
+      "docker": "needs `docker:` on win2k8",
+      "hosted": "needs `docker:` on win2k8",
+      "docker-vm": "needs `docker:` on win2k8",
+      "cloud-docker": "needs `docker:` on win2k8",
+      "kubernetes": "needs `docker:` on win2k8",
+      "hybrid": "only when some machines are containers and others are VMs",
+      "external": "needs `external:` on win2k8"
+    }
+  },
+  "checks": {
+    "default_position": "networks",
+    "positions": [
+      {
+        "position": "networks",
+        "machine": null,
+        "runner": "isoloom-check",
+        "checks": [
+          {
+            "name": "iis answers",
+            "derived": false,
+            "kind": "http",
+            "target": "http://win2k8/",
+            "expect": "200",
+            "wait": 600
+          },
+          {
+            "name": "jenkins answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:8484",
+            "expect": "open",
+            "wait": 300
+          },
+          {
+            "name": "ftp answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:21",
+            "expect": "open",
+            "wait": 30
+          },
+          {
+            "name": "ssh answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:22",
+            "expect": "open",
+            "wait": 30
+          },
+          {
+            "name": "glassfish admin answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:4848",
+            "expect": "open",
+            "wait": 300
+          },
+          {
+            "name": "glassfish answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:8080",
+            "expect": "open",
+            "wait": 30
+          },
+          {
+            "name": "manageengine answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:8020",
+            "expect": "open",
+            "wait": 300
+          },
+          {
+            "name": "struts answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:8282",
+            "expect": "open",
+            "wait": 300
+          },
+          {
+            "name": "wamp answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:8585",
+            "expect": "open",
+            "wait": 30
+          },
+          {
+            "name": "elasticsearch answers",
+            "derived": false,
+            "kind": "tcp",
+            "target": "win2k8:9200",
+            "expect": "open",
+            "wait": 300
+          },
+          {
+            "name": "checks/vulnerable-services.sh",
+            "derived": false,
+            "kind": "script",
+            "target": "checks/vulnerable-services.sh",
+            "expect": "",
+            "wait": 0
+          }
+        ]
+      }
+    ]
+  },
+  "message": "Metasploitable 3 (Windows Server 2008 R2) is up at 10.60.83.10. Scan it:\nIIS, FTP, GlassFish, Jenkins, Apache Struts, WordPress on WAMP, ManageEngine Desktop Central,\nElasticsearch and more. Fifteen card flags are hidden on the machine.\n"
+}

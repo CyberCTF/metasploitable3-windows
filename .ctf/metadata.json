@@ -1,0 +1,10 @@
+{
+  "title": "Metasploitable 3 (Windows)",
+  "description": "Rapid7's intentionally vulnerable Windows Server 2008 R2: IIS and FTP, GlassFish, Jenkins, Apache Struts, Axis2, WordPress on WAMP, ManageEngine Desktop Central, Elasticsearch and more, with fifteen hidden card flags.",
+  "question": "Find the card flags hidden on the machine.",
+  "category": "NETWORK",
+  "difficulty": 2,
+  "evidence_kind": "SECRET",
+  "capabilities": ["service-enumeration", "remote-code-execution", "privilege-escalation", "windows-exploitation", "password-cracking"],
+  "providers": ["virtualbox", "vmware_desktop"]
+}
