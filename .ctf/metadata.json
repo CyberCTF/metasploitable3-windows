@@ -5,6 +5,8 @@
   "category": "NETWORK",
   "difficulty": 2,
   "evidence_kind": "SECRET",
-  "capabilities": ["service-enumeration", "remote-code-execution", "privilege-escalation", "windows-exploitation", "password-cracking"],
-  "providers": ["virtualbox", "vmware_desktop"]
+  "providers": [
+    "virtualbox",
+    "vmware_desktop"
+  ]
 }
