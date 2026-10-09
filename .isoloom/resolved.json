@@ -147,7 +147,8 @@
       "cloud-docker": "needs `docker:` on win2k8",
       "kubernetes": "needs `docker:` on win2k8",
       "hybrid": "only when some machines are containers and others are VMs",
-      "external": "needs `external:` on win2k8"
+      "external": "needs `external:` on win2k8",
+      "cloud-services": "left out by `targets:`"
     }
   },
   "checks": {
