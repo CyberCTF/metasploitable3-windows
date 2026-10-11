@@ -8,6 +8,9 @@
 version: 1
 name: metasploitable3-windows
 
+# Given by the CyberCTF launcher: this player's flag. Without it the development flag.
+inputs: [CTF_FLAG_MAIN]
+
 networks:
   lab: { cidr: 10.60.83.0/24 }
 
@@ -27,6 +30,7 @@ machines:
       - { port: 8585, name: wamp, http: true }
       - { port: 9200, name: elasticsearch, http: true }
     resources: { cpus: 2, memory_mb: 4096 }
+    inputs: [CTF_FLAG_MAIN]
     vm:
       # Windows Server 2008 R2 has no built-in OS name in Isoloom; the box is given explicitly.
       os: windows-server-2016
@@ -34,7 +38,8 @@ machines:
         vagrant: rapid7/metasploitable3-win2k8
         vagrant_version: "0.1.0-weekly"
         winrm: plaintext
-      provision: [provision/startup.ps1]
+      # flag.ps1 writes the player's flag to C:\ctf\flag.txt (Administrators and SYSTEM only).
+      provision: [provision/startup.ps1, provision/flag.ps1]
 
 checks:
   - { name: iis answers, http: "http://win2k8/", wait: 600 }
@@ -52,4 +57,5 @@ checks:
 message: |
   Metasploitable 3 (Windows Server 2008 R2) is up at {{ machines.win2k8.addresses.lab }}. Scan it:
   IIS, FTP, GlassFish, Jenkins, Apache Struts, WordPress on WAMP, ManageEngine Desktop Central,
-  Elasticsearch and more. Fifteen card flags are hidden on the machine.
+  Elasticsearch and more. Get administrative control and read C:\ctf\flag.txt; fifteen card
+  flags are hidden too.

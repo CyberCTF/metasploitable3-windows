@@ -3,7 +3,9 @@
   "resolved_version": 1,
   "name": "metasploitable3-windows",
   "instance": null,
-  "inputs": [],
+  "inputs": [
+    "CTF_FLAG_MAIN"
+  ],
   "networks": {
     "lab": {
       "cidr": "10.60.83.0/24",
@@ -101,7 +103,9 @@
         }
       ],
       "depends_on": [],
-      "inputs": [],
+      "inputs": [
+        "CTF_FLAG_MAIN"
+      ],
       "volumes": {},
       "resources": {
         "cpus": 2,
@@ -251,5 +255,5 @@
       }
     ]
   },
-  "message": "Metasploitable 3 (Windows Server 2008 R2) is up at 10.60.83.10. Scan it:\nIIS, FTP, GlassFish, Jenkins, Apache Struts, WordPress on WAMP, ManageEngine Desktop Central,\nElasticsearch and more. Fifteen card flags are hidden on the machine.\n"
+  "message": "Metasploitable 3 (Windows Server 2008 R2) is up at 10.60.83.10. Scan it:\nIIS, FTP, GlassFish, Jenkins, Apache Struts, WordPress on WAMP, ManageEngine Desktop Central,\nElasticsearch and more. Get administrative control and read C:\\ctf\\flag.txt; fifteen card\nflags are hidden too.\n"
 }

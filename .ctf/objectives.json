@@ -1,0 +1,42 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Own the server",
+      "prompt": "Get SYSTEM or local Administrator on the Metasploitable 3 Windows Server 2008 R2 machine and read C:\\ctf\\flag.txt.",
+      "check": { "evidence": "SECRET", "format": "FLAG{%s}" },
+      "dev": "FLAG{dev-metasploitable3-windows}",
+      "hints": [
+        "Scan every port: several web applications run old releases with public advisories.",
+        "Some services run as SYSTEM, so a remote code execution bug in one of them is the whole way in. The Metasploitable 3 wiki lists the intended vulnerabilities.",
+        "Landed as a low-privileged service account? Look for a local privilege escalation to SYSTEM."
+      ],
+      "steps": [
+        {
+          "key": "search",
+          "title": "Fingerprint the search engine",
+          "prompt": "Which version of Elasticsearch answers on port 9200?",
+          "check": { "answer_regex": "^1\\.1\\.1$" }
+        },
+        {
+          "key": "search-cve",
+          "title": "Find the advisory",
+          "prompt": "Which CVE covers code execution through dynamic scripting in that Elasticsearch release?",
+          "check": { "answer": ["cve-2014-3120", "2014-3120"] }
+        },
+        {
+          "key": "ci",
+          "title": "Another service",
+          "prompt": "Which continuous integration server answers on port 8484? (name only)",
+          "check": { "answer": ["jenkins"] }
+        },
+        {
+          "key": "ci-feature",
+          "title": "Name the feature",
+          "prompt": "Which built-in feature of that CI server runs Groovy code for an administrator, and is reachable here without logging in? (two words)",
+          "check": { "answer": ["script console", "groovy script console", "scriptconsole"] }
+        }
+      ]
+    }
+  ]
+}
