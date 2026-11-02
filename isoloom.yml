@@ -9,37 +9,47 @@ version: 1
 name: metasploitable3-windows
 
 # Given by the CyberCTF launcher: this player's flag. Without it the development flag.
-inputs: [CTF_FLAG_MAIN]
+inputs:
+  CTF_FLAG_MAIN: { description: "This player's flag, written to C:\\ctf\\flag.txt on win2k8." }
 
 networks:
   lab: { cidr: 10.60.83.0/24 }
 
 machines:
   win2k8:
+    # Windows Server 2008 R2 has no built-in OS name in Isoloom; the box is pinned in `overrides`.
+    os: windows-server@2016
     networks: { lab: 10 }
-    services:
-      - { port: 21, name: ftp }
-      - { port: 22, name: ssh }
-      - { port: 80, name: iis, http: true }
-      - { port: 4848, name: glassfish-admin }
-      - { port: 8020, name: manageengine }
-      - { port: 8383, name: manageengine-https }
-      - { port: 8080, name: glassfish, http: true }
-      - { port: 8282, name: struts }
-      - { port: 8484, name: jenkins, http: true }
-      - { port: 8585, name: wamp, http: true }
-      - { port: 9200, name: elasticsearch, http: true }
+    ports:
+      ftp: 21
+      ssh: 22
+      iis: { port: 80, protocol: http }
+      glassfish-admin: 4848
+      manageengine: 8020
+      manageengine-https: 8383
+      glassfish: { port: 8080, protocol: http }
+      struts: 8282
+      jenkins: { port: 8484, protocol: http }
+      wamp: { port: 8585, protocol: http }
+      elasticsearch: { port: 9200, protocol: http }
     resources: { cpus: 2, memory_mb: 4096 }
-    inputs: [CTF_FLAG_MAIN]
-    vm:
-      # Windows Server 2008 R2 has no built-in OS name in Isoloom; the box is given explicitly.
-      os: windows-server-2016
-      image:
-        vagrant: rapid7/metasploitable3-win2k8
-        vagrant_version: "0.1.0-weekly"
+    # The player's flag is staged for flag.ps1, which writes C:\ctf\flag.txt readable by
+    # Administrators and SYSTEM only.
+    files:
+      - { path: 'C:\Windows\Temp\ctf_flag_main', input: CTF_FLAG_MAIN }
+    app:
+      # startup.ps1 is upstream's first-boot step; flag.ps1 then places the player's flag.
+      steps:
+        - run: provision/startup.ps1
+        - run: provision/flag.ps1
+
+overrides:
+  vagrant:
+    machines:
+      win2k8:
+        box: rapid7/metasploitable3-win2k8
+        box_version: "0.1.0-weekly"
         winrm: plaintext
-      # flag.ps1 writes the player's flag to C:\ctf\flag.txt (Administrators and SYSTEM only).
-      provision: [provision/startup.ps1, provision/flag.ps1]
 
 checks:
   - { name: iis answers, http: "http://win2k8/", wait: 600 }
